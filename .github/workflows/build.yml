@@ -38,7 +38,7 @@ jobs:
       - name: Clean up build artifacts
         run: |
           set -e
-          cp app/build/outputs/apk/dev/debug/app-dev-universal-debug.apk aniyomi-mpv-universal-${{ github.event.inputs.release-tag }}.apk
+          mv app/build/outputs/apk/dev/debug/app-dev-universal-debug.apk aniyomi-mpv-universal-${{ github.event.inputs.release-tag }}.apk
           cp app/build/outputs/apk/dev/debug/app-dev-arm64-v8a-debug.apk aniyomi-mpv-arm64-v8a-${{ github.event.inputs.release-tag }}.apk
           cp app/build/outputs/apk/dev/debug/app-dev-armeabi-v7a-debug.apk aniyomi-mpv-armeabi-v7a-${{ github.event.inputs.release-tag }}.apk
           cp app/build/outputs/apk/dev/debug/app-dev-x86-debug.apk aniyomi-mpv-x86-${{ github.event.inputs.release-tag }}.apk
