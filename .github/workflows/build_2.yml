@@ -1,0 +1,60 @@
+name: Build aniyomi-mpv official
+
+on:
+  # Manual triggers
+  workflow_dispatch:
+    inputs:
+      release-tag:
+        description: What version is this? 
+        required: true
+      dry-run:
+        description: Creates a draft release
+        required: false
+
+jobs:
+  build-app:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v2
+        with:
+          repository: Quickdesh/Animiru 
+          fetch-depth: 0
+          ref: master-mpv 
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Build APK
+        uses: gradle/gradle-command-action@v1
+        with:
+          arguments: assembleDevDebug 
+          distributions-cache-enabled: true
+          dependencies-cache-enabled: true
+          configuration-cache-enabled: true
+
+      - name: Clean up build artifacts
+        run: |
+          set -e
+          mv app/build/outputs/apk/dev/debug/app-dev-universal-debug.apk aniyomi-mpv-universal-${{ github.event.inputs.release-tag }}.apk
+          cp app/build/outputs/apk/dev/debug/app-dev-arm64-v8a-debug.apk aniyomi-mpv-arm64-v8a-${{ github.event.inputs.release-tag }}.apk
+          cp app/build/outputs/apk/dev/debug/app-dev-armeabi-v7a-debug.apk aniyomi-mpv-armeabi-v7a-${{ github.event.inputs.release-tag }}.apk
+          cp app/build/outputs/apk/dev/debug/app-dev-x86-debug.apk aniyomi-mpv-x86-${{ github.event.inputs.release-tag }}.apk
+      - name: Create release
+        uses: softprops/action-gh-release@v0.1.14
+        with:
+          tag_name: ${{ github.event.inputs.release-tag }}
+          name: ${{ github.event.inputs.release-tag }}
+          body: |
+            awesome release
+          files: |
+            aniyomi-mpv-universal-${{ github.event.inputs.release-tag }}.apk 
+            aniyomi-mpv-arm64-v8a-${{ github.event.inputs.release-tag }}.apk 
+            aniyomi-mpv-armeabi-v7a-${{ github.event.inputs.release-tag }}.apk
+            aniyomi-mpv-x86-${{ github.event.inputs.release-tag }}.apk
+          draft: ${{ github.event.inputs.dry-run != '' }}
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
