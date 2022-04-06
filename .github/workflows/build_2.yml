@@ -1,4 +1,4 @@
-name: Build aniyomi-mpv official
+name: Build aniyomi-mpv quickdesh
 
 on:
   # Manual triggers
@@ -7,9 +7,6 @@ on:
       release-tag:
         description: What version is this? 
         required: true
-      dry-run:
-        description: Creates a draft release
-        required: false
 
 jobs:
   build-app:
@@ -54,7 +51,7 @@ jobs:
             aniyomi-mpv-arm64-v8a-${{ github.event.inputs.release-tag }}.apk 
             aniyomi-mpv-armeabi-v7a-${{ github.event.inputs.release-tag }}.apk
             aniyomi-mpv-x86-${{ github.event.inputs.release-tag }}.apk
-          draft: ${{ github.event.inputs.dry-run != '' }}
+          draft: true
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
