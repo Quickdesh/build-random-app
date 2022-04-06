@@ -1,4 +1,4 @@
-name: Build job
+name: Build aniyomi-mpv official
 
 on:
   # Manual triggers
